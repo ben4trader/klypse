@@ -17,8 +17,32 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Set up environment
             export PATH=$PATH:/root/.bun/bin
+            
+            # Go to app directory
             cd /var/www/${{ github.ref_name == 'main' && 'klypse.io' || 'dev.klypse.io' }}/app
+            
+            # Pull latest changes
             git pull origin ${{ github.ref_name }}
+            
+            # Install dependencies
             make install
-            make dev
+            
+            # Start the server in the background
+            cd packages/backend && bun src/server.ts &
+            
+            # Wait for the server to start
+            sleep 10
+            
+            # Check if server is running
+            curl http://localhost:3000 || true
+script: |
+  export PATH=$PATH:/root/.bun/bin
+  cd /var/www/${{ github.ref_name == 'main' && 'klypse.io' || 'dev.klypse.io' }}/app
+  git pull origin ${{ github.ref_name }}
+  make install
+  # Start the server in the background
+  cd packages/backend && bun src/server.ts &
+  # Wait a bit for the server to start
+  sleep 5
