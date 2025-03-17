@@ -22,7 +22,7 @@ const config = useConfig();
         <div class="max-w-2xl">
             <div class="text-center max-w-xs mx-auto sm:max-w-full">
                 <h1 class="text-5xl font-bold tracking-tight text-[#07204E] mt-9">
-                    Monetize your content instantly.
+                    Monnnnetize your content instantly.
                 </h1>
                 <p class="mt-10 text-base text-[#07204E]">
                     Effortlessly add a ${{ config.defaultPrice }} micropaywall to start earning from every post.
