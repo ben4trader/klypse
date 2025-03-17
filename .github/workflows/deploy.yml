@@ -1,0 +1,23 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 67.205.142.130
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/${{ github.ref_name == 'main' && 'klypse.io' || 'dev.klypse.io' }}/app
+            git pull origin ${{ github.ref_name }}
+            make install
+            make dev
