@@ -18,12 +18,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             export PATH=$PATH:/root/.bun/bin
-            cd /var/www/${{ github.ref_name == 'main' && 'klypse.io' || 'dev.klypse.io' }}/app
-            git pull origin ${{ github.ref_name }}
-            make install
-            # Kill existing process on port 3000
-            lsof -ti:3000 | xargs kill -9 || true
-            # Start the server in the background
-            cd packages/backend && bun src/server.ts &
-            # Wait a bit for the server to start
-            sleep 5
+            if [[ "${{ github.ref_name }}" == "main" ]]; then
+              cd /var/www/klypse.io/app
+              git pull origin main
+              make install
+              make restart-prod
+            else
+              cd /var/www/dev.klypse.io/app
+              git pull origin dev
+              make install
+              make restart-dev
+            fi

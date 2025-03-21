@@ -8,6 +8,8 @@
     "db:init": "prisma generate",
     "db:migrate": "dotenv -e ../backend/.env -- npx prisma migrate dev --name init",
     "db:studio": "dotenv -e ../backend/.env -- npx prisma studio",
+    "db:dump": "dotenv -e ../backend/.env -- bash -c 'export PGPASSWORD=klypsedevdb868 && pg_dump -h 67.205.142.130 -p 5432 -U postgres postgres > database_dump.sql'",
+    "db:restore": "dotenv -e ../backend/.env -- bash -c 'export PGPASSWORD=klypsedevdb868 && psql -h 67.205.142.130 -p 5432 -U postgres postgres < database_dump.sql'",
     "build": "tsc"
   },
   "author": "",

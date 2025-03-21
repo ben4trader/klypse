@@ -30,3 +30,22 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+html.is-loading {
+  visibility: hidden;
+}
+
+/* If you prefer a loading indicator instead of hiding content completely */
+/*
+html.is-loading::before {
+  visibility: visible;
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-color: white;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+*/
