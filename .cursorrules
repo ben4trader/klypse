@@ -1,0 +1,94 @@
+You are helping me build Klypse, a revolutionary PWA social media platform with:
+- Ephemeral posting (16-hour lifespan)
+- $KIN cryptocurrency integration for micropayments
+- Code wallet authentication
+- Ad-free monetization model
+- Focus on creativity and genuine connections
+- Minimalist design with "cosmic" visual theme
+
+The architecture uses a monorepo with:
+- packages/api: Binary network protocol
+- packages/database: Prisma ORM with PostgreSQL
+- packages/backend: Business logic server using Bun/TypeScript
+- packages/frontend: UI components
+
+When working on authentication, remember:
+- Code wallet integration is the primary login method
+- Users should have anonymity by default
+- Profile data is minimal: avatar, nickname, and stats
+- We need a guest mode for browsing without signup
+
+When implementing content features, remember:
+- Posts expire after 16 hours
+- One free post per day per user
+- Premium posts have boost mechanics
+- Content types: 30-second video or 320-character text + image
+- "Revive" feature extends post life through KIN payments
+
+For KIN payment implementation, focus on:
+- Likes: $0.05 KIN (100% to creator + Code wallet fee)
+- Tips: Preset amounts $0.25, $0.50, $1
+- Follows: $1 KIN to the followed user
+- Premium post pricing: $0.25, $0.50, $1 with increasing boost
+- Verifier key handling for payment security
+
+The UI must follow these principles:
+- "Cosmic" theme with pulse animations
+- Minimalist, distraction-free design
+- Vertical scroll with randomized discovery
+- Real-time leaderboards and Rising Stars tabs
+- Countdown visuals for post expiration
+- Flippable profile cards
+
+When modifying the database, remember:
+- Use Prisma ORM for all database interactions
+- Schema is in packages/database/prisma/schema.prisma
+- Run migrations with make migrate
+- Test schema changes with make studio
+- Include all required relations for efficient querying
+
+For API work, follow these patterns:
+- Binary protocol defined in proto files
+- Type-safe interfaces between frontend and backend
+- RESTful endpoints for external integrations
+- WebSockets for real-time features (leaderboards, etc.)
+- Authentication middleware for protected routes
+
+Backend implementation should:
+- Use TypeScript for type safety
+- Follow modular architecture with clear separation of concerns
+- Implement robust error handling
+- Use environment variables for configuration
+- Include comprehensive logging
+- Handle payment processing securely
+
+Frontend code should:
+- Use modern React with hooks
+- Implement responsive design for mobile-first approach
+- Create reusable components with clear props interfaces
+- Use state management appropriate for component scope
+- Follow accessibility best practices
+- Optimize for performance (lazy loading, etc.)
+
+For testing and deployment:
+- Write unit tests for critical business logic
+- Test payment flows thoroughly in isolation
+- Use Docker for consistent environments (make build)
+- Implement CI/CD through GitHub workflows
+- Use make scripts for common development tasks
+- Back up frequently with make backup
+- Deploy using make deploy
+
+All code should be documented with:
+- Clear function/component descriptions
+- API endpoint documentation
+- Database schema explanations
+- Environment variable requirements
+- Setup instructions for new developers
+
+When asking for help with a specific problem:
+1. Describe the feature in the context of Klypse's goals
+2. Share the relevant code files or snippets
+3. Explain what you've tried so far
+4. Specify the exact error or unexpected behavior
+5. Ask for a solution that follows the project's architectural patterns

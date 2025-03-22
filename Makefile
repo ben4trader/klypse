@@ -104,8 +104,8 @@ verifier-key:
 	@echo "Generating verifier key"
 	cd packages/backend && npm run script:gen-secret
 
-.PHONY: backup-full
-backup-full:
+.PHONY: backup
+backup:
 	@echo "Creating full backup of the application..."
 	@mkdir -p ./backups
 	@DATE=$$(date +"%Y%m%d"); \
@@ -142,19 +142,27 @@ backup-full:
 		echo "Error: Backup file was not created successfully."; \
 	fi
 
-.PHONY: restore-full
-restore-full:
+.PHONY: restore
+restore:
 	@if [ -z "$(backup)" ]; then \
-		echo "\n\nError: backup file is not specified. Please provide a backup file."; \
-		echo "Example:"; \
-		echo "\tmake restore-full backup=./backups/20250321_1216_initial-test.tar.gz\n\n"; \
-		exit 1; \
+		echo "Available backups:"; \
+		ls -1 ./backups/*.tar.gz 2>/dev/null | cat -n || (echo "No backups found."; exit 1); \
+		echo ""; \
+		read -p "Enter the number of the backup to restore: " backup_num; \
+		BACKUP_FILE=$$(ls -1 ./backups/*.tar.gz 2>/dev/null | sed -n "$$backup_num"p); \
+		if [ -z "$$BACKUP_FILE" ]; then \
+			echo "Invalid selection. Exiting."; \
+			exit 1; \
+		fi; \
+		echo "Selected backup: $$BACKUP_FILE"; \
+	else \
+		BACKUP_FILE="$(backup)"; \
 	fi; \
-	echo "Restoring from backup $(backup)..."; \
+	echo "Restoring from backup $$BACKUP_FILE..."; \
 	BACKUP_DIR="./backup_restore_temp"; \
 	mkdir -p $$BACKUP_DIR; \
 	echo "Extracting backup..."; \
-	tar -xzf $(backup) -C $$BACKUP_DIR; \
+	tar -xzf $$BACKUP_FILE -C $$BACKUP_DIR; \
 	echo "Restoring application files..."; \
 	cp -r $$BACKUP_DIR/* ./; \
 	if [ -f "$$BACKUP_DIR/database_dump.sql" ]; then \
@@ -165,10 +173,15 @@ restore-full:
 	fi; \
 	rm -rf $$BACKUP_DIR; \
 	echo "Full restoration completed successfully."; \
-	echo "You may need to run 'make install' to rebuild dependencies."
+	echo "Running make install to rebuild dependencies..."; \
+	make install; \
+	echo "Restarting development server..."; \
+	lsof -ti:3000 | xargs kill -9 2>/dev/null || true; \
+	echo "Killed any processes running on port 3000"; \
+	make dev
 
-.PHONY: list-full-backups
-list-full-backups:
+.PHONY: list-backups
+list-backups:
 	@echo "Available backups:"
 	@ls -lh ./backups/*.tar.gz 2>/dev/null || echo "No backups found."
 
@@ -225,7 +238,7 @@ stop-prod:
 .PHONY: push-dev
 push-dev:
 	@echo "Creating backup before pushing to dev..."
-	@make backup-full keyword=pre-push
+	@make backup keyword=pre-push
 	@echo "Adding all changes to git..."
 	git add .
 	@echo "Committing changes..."
@@ -234,3 +247,14 @@ push-dev:
 	@echo "Pushing to dev branch..."
 	git push origin dev
 	@echo "Changes pushed to dev branch successfully."
+
+.PHONY: studio
+studio:
+	@echo "Starting Prisma Studio..."
+	@if [ ! -f packages/backend/.env ]; then \
+		echo "\nError: packages/backend/.env file not found. Please create one using the template provided in packages/backend/.env.example"; \
+		echo "\nExample:"; \
+		echo "\tcp ./packages/backend/example.env ./packages/backend/.env\n\n"; \
+		exit 1; \
+	fi
+	cd packages/database && dotenv -e ../backend/.env -- npx prisma studio
