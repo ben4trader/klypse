@@ -250,6 +250,21 @@ push-dev:
 	git push origin dev
 	@echo "Changes pushed to dev branch successfully."
 
+.PHONY: push-main
+push-main:
+	@echo "Creating backup before pushing to main..."
+	@make backup keyword=pre-main-push
+	@echo "Switching to main branch..."
+	git checkout main || (echo "Failed to switch to main branch" && exit 1)
+	@echo "Adding all changes to git..."
+	git add .
+	@echo "Committing changes..."
+	@read -p "Enter commit message: " message; \
+	git commit -m "$$message"
+	@echo "Pushing to main branch..."
+	git push origin main
+	@echo "Changes pushed to main branch successfully."
+
 .PHONY: studio
 studio:
 	@echo "Starting Prisma Studio..."
