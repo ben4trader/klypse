@@ -21,10 +21,10 @@ const config = useConfig();
 
         <div class="max-w-2xl">
             <div class="text-center max-w-xs mx-auto sm:max-w-full">
-                <h1 class="text-5xl font-bold tracking-tight text-[#07204E] mt-9">
-                    Monnnnetize your content instantly.
+                <h1 class="text-5xl font-bold tracking-tight text-white mt-9">
+                    Monetize your content instantly.
                 </h1>
-                <p class="mt-10 text-base text-[#07204E]">
+                <p class="mt-10 text-base text-white">
                     Effortlessly add a ${{ config.defaultPrice }} micropaywall to start earning from every post.
                 </p>
 
@@ -44,8 +44,8 @@ const config = useConfig();
                             success-url="/redirect/login/{{INTENT_ID}}" 
                         />
                     </ClientOnly>
-                    <p class="mt-14 text-sm text-[#07204E]">
-                        Don’t have the Code App yet? <a href="https://getcode.com/download" class="underline">Download It Now</a>
+                    <p class="mt-14 text-sm text-white">
+                        Don't have the Code App yet? <a href="https://getcode.com/download" class="underline">Download It Now</a>
                     </p>
                 </div>
 
