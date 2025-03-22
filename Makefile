@@ -239,6 +239,8 @@ stop-prod:
 push-dev:
 	@echo "Creating backup before pushing to dev..."
 	@make backup keyword=pre-push
+	@echo "Switching to dev branch..."
+	git checkout dev || (echo "Failed to switch to dev branch" && exit 1)
 	@echo "Adding all changes to git..."
 	git add .
 	@echo "Committing changes..."
